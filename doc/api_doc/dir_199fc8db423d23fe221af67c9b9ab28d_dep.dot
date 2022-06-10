@@ -1,0 +1,22 @@
+digraph "network" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_407195b71e2fda49d4a285654b5b25b9 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="common" fontname="Helvetica", fontsize="10", URL="dir_407195b71e2fda49d4a285654b5b25b9.html"]
+  subgraph clusterdir_199fc8db423d23fe221af67c9b9ab28d {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_199fc8db423d23fe221af67c9b9ab28d.html"];
+    dir_199fc8db423d23fe221af67c9b9ab28d [shape=plaintext label="network"];
+    dir_343c3b8af3990974a3d33eb9b8a837fd [shape=box label="coap" color="red" fillcolor="white" style="filled" URL="dir_343c3b8af3990974a3d33eb9b8a837fd.html"];
+    dir_ad5b78d108ccb48c78676afdc0ab2c28 [shape=box label="httpc" color="black" fillcolor="white" style="filled" URL="dir_ad5b78d108ccb48c78676afdc0ab2c28.html"];
+    dir_7160857054ab51eb3bf9dbf9c645efb3 [shape=box label="httpd" color="black" fillcolor="white" style="filled" URL="dir_7160857054ab51eb3bf9dbf9c645efb3.html"];
+  }
+  }
+  dir_06ad8601b5326a8d3233cc0ad1522a15 [shape=box label="os" fillcolor="white" style="filled" color="red" URL="dir_06ad8601b5326a8d3233cc0ad1522a15.html"];
+  dir_435a1cbcff50261cf8c3dbf8934d9571 [shape=box label="api" fillcolor="white" style="filled" color="red" URL="dir_435a1cbcff50261cf8c3dbf8934d9571.html"];
+  dir_2f5c403069b5344eab7b4067fcd4aac1 [shape=box label="drivers" fillcolor="white" style="filled" color="red" URL="dir_2f5c403069b5344eab7b4067fcd4aac1.html"];
+  dir_343c3b8af3990974a3d33eb9b8a837fd->dir_06ad8601b5326a8d3233cc0ad1522a15 [headlabel="1", labeldistance=1.5 headhref="dir_000022_000019.html"];
+  dir_343c3b8af3990974a3d33eb9b8a837fd->dir_435a1cbcff50261cf8c3dbf8934d9571 [headlabel="1", labeldistance=1.5 headhref="dir_000022_000024.html"];
+  dir_343c3b8af3990974a3d33eb9b8a837fd->dir_2f5c403069b5344eab7b4067fcd4aac1 [headlabel="1", labeldistance=1.5 headhref="dir_000022_000026.html"];
+  dir_435a1cbcff50261cf8c3dbf8934d9571->dir_2f5c403069b5344eab7b4067fcd4aac1 [headlabel="2", labeldistance=1.5 headhref="dir_000024_000026.html"];
+}

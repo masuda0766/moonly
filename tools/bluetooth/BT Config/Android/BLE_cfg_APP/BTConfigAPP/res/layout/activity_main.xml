@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	android:id="@+id/mainlayout"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <LinearLayout
+		android:id="@+id/layer1_linear_top_bar"
+		android:layout_width="fill_parent"
+		android:layout_height="60dp"
+		android:orientation="horizontal"
+		android:background="@drawable/bg2">
+
+        <ImageButton
+            android:id="@+id/btn_version"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:padding="2dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_launcher"
+            android:background="#00000000"/>
+        
+        <TextView
+            android:id="@+id/textAPPTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:text="@string/app_lable_name"
+            android:layout_weight="1"/>
+
+        <ImageButton
+			android:id="@+id/btn_gosetting"
+			android:contentDescription="@string/app_name"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:padding="5dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/btn_adddevice"
+			android:background="#00000000"
+			/>
+        
+        <ImageButton
+			android:id="@+id/btn_site_survey"
+			android:contentDescription="@string/app_name"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:padding="5dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/btn_ss"
+			android:background="#00000000"/>
+        
+        <ImageButton
+			android:id="@+id/btn_info_setting"
+			android:contentDescription="@string/app_name"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:padding="5dp"
+			android:scaleType="fitXY"
+			android:src="@drawable/btn_info"
+			android:background="#00000000"/>
+
+	</LinearLayout>
+    
+   <LinearLayout
+		android:id="@+id/layer1_linear_display"
+		android:layout_width="fill_parent"
+		android:layout_height="70dp"
+		android:orientation="vertical"
+		android:background="#C5E8FC">
+        
+       		<!-- BT device -->
+			<TextView
+		        android:id="@+id/textDeviceName"
+		        android:layout_width="fill_parent"
+	           	android:layout_height="28dp"
+		        android:layout_gravity="center"
+		        android:gravity="center"
+		        android:background="#BBBBBB"
+		        android:textColor="#000000"
+	           	android:textSize="18sp"
+	           	android:text="@string/lable_select_device_name"/>
+			
+			<!-- target AP information  start-->
+			<LinearLayout
+				android:id="@+id/layer2_linear_display"
+			    android:layout_width="fill_parent"
+			    android:layout_height="42dp"
+			    android:orientation="horizontal">
+
+				<LinearLayout
+				    android:id="@+id/linear1"
+				    android:layout_width="0dp"
+				    android:layout_height="fill_parent"
+				    android:orientation="vertical"
+				    android:layout_weight="1">
+					<TextView android:id="@+id/textSSID_target"
+						android:layout_width="wrap_content"
+						android:layout_height="0dp"
+						android:textSize="19sp"
+						android:maxLines="2" 
+						android:textColor="#000000"
+						android:paddingRight="5dip"
+						android:layout_weight="3"/>
+					<LinearLayout
+					    android:id="@+id/layer3_linear1"
+					    android:layout_width="match_parent"
+					    android:layout_height="0dp"
+					    android:layout_marginLeft="0dip" 
+					    android:orientation="horizontal"
+					    android:layout_weight="2">
+						<TextView android:id="@+id/textMAC_target"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:paddingRight="2dip"
+							android:maxLines="2" 
+							android:textColor="#80808FF0"/>
+						
+						<TextView android:id="@+id/wifi_list_item_rssi"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="30dip"
+							android:paddingRight="5dip"
+							android:maxLines="2" 
+							android:textColor="#80808FF0"
+							android:visibility="gone"/>
+						
+					</LinearLayout>
+				</LinearLayout>
+				
+				<LinearLayout
+				    android:id="@+id/linear2"
+				    android:layout_width="90dp"
+				    android:layout_height="fill_parent"
+				    android:layout_alignParentRight="true"
+				    android:orientation="horizontal"
+				    android:paddingTop="1dp">
+	
+				    <ImageView
+					    android:id="@+id/img_target_encrypt"
+						android:layout_marginLeft="10dp"
+					    android:layout_width="35dp"
+					    android:layout_height="35dp" />
+					<ImageView
+					    android:id="@+id/img_target_rssi"
+					    android:layout_width="40dp"
+					    android:layout_height="40dp" />
+						
+				</LinearLayout>
+		</LinearLayout>
+		<!-- target AP information  end-->
+		
+	</LinearLayout>
+    
+   <LinearLayout
+       	android:id="@+id/layer1_ap_list_view"
+		android:layout_width="fill_parent"
+		android:layout_height="0dp" 
+		android:layout_weight="1"
+		android:orientation="vertical"
+		android:background="@drawable/bg1">
+		
+   </LinearLayout>
+       
+    <!-- ScrollView
+			android:id="@+id/layer1_scrollview"
+			android:layout_width="fill_parent"
+			android:layout_height="0dp" 
+			android:layout_weight="1"
+			android:background="@drawable/bg1">
+		<LinearLayout
+			android:id="@+id/layer2_linear1"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"-->
+			<!-- ListView android:id="@+id/btScanListViewID" 
+			    android:layout_width="fill_parent" 
+			    android:layout_height="fill_parent"
+			    android:divider="@color/separate_line"
+	            android:dividerHeight="1dp">
+			</ListView-->
+			
+			
+			<!-- ListView
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:id="@+id/wlanScanListID_2G"
+		        android:layout_gravity="center"
+	          	android:layout_marginTop="15dp" />
+			
+		    <ListView
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:id="@+id/wlanScanListID_5G"
+		        android:layout_gravity="center"
+	           android:layout_marginTop="15dp" />
+			
+		</LinearLayout>
+	</ScrollView-->
+	
+</LinearLayout>

@@ -1,0 +1,7 @@
+                        ChangeLog
+----------------------------------------------------------------
+2017/04/25
+	- Display classic BT device only when DUT response classic BT and BLE. 
+
+2017/01/20
+	- Initial Release

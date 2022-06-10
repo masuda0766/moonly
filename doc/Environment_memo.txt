@@ -1,0 +1,79 @@
+Audrey開発環境について
+
+※詳細は以下を参照
+UM0096 Realtek Ameba build environment setup - gcc.pdf
+UM0100 Realtek Ameba-1 build environment setup - eclipse.pdf
+
+■事前準備
+◇共通（UM0096 Realtek Ameba build environment setup - gcc.pdf）
+1). Cygwinインストール（P4）
+2). OpenOCDインストール（P13）
+
+
+◇Eclipseの取得とインストール
+（UM0100 Realtek Ameba-1 build environment setup - eclipse.pdf）
+1). http://www.oracle.com/technetwork/java/javase/downloads/index.html
+    から、JRE 8 をDLして、インストールする。
+2). https://www.eclipse.org/downloads/eclipse-packages/
+    から、Eclipse Neon の「Eclipse IDE for C/C++ Developers」をDLして、インストールする。
+3). eclipse を起動する。
+    メニューから「Help」-「Install New Software」を選択する。
+    「C/C++ GDB Hardware Debugging」をインストールする。
+4). メニューから「Help」-「Install New Software」を再度選択する。
+5). 「Add...」を選択し、［Archive...］を選択し、
+    「ilg.gnuarmeclipse.repository-3.1.1-201606210758.zip」を選択し、［OK］を選択。
+6). 「GNU ARM C/C++ OpenOCD Debugging」をインストールする。
+
+
+◇評価ボード接続
+1). 以下ドライバをインストール
+    tools\serial_to_usb\mbedWinSerial_16466.zip.
+2). USBケーブルでPCと評価ボードのCON2を接続
+3). ログ出力用のTeraterm設定
+    115200bps、データ8bit、パリティ無、ストップ1bit、フロー制御無
+
+
+■ビルド
+◇git環境取得
+1). git clone gitolite@10.24.45.71:nas/dragonAP
+2). 以下を同フォルダに解凍
+ tools\arm-none-eabi-gcc\4_8-2014q3.7z
+
+
+◇GCC（UM0096 Realtek Ameba build environment setup - gcc.pdf）
+1). Cygwin terminal上で$ cd /cygdrive/SDK_LOC(ワークスペースのルート)/project/realtek_ameba1_va0_example/GCC-RELEASE（P7）
+2). $ make（P7）
+
+
+◇eclipse（UM0100 Realtek Ameba-1 build environment setup - eclipse.pdf）
+1). Eclipseで、取得した環境のルートを、ワークスペースのルートとして開く。
+2). アプリケーションインポート(P7)
+3). ツールの設定(P10)
+2). 「Build Project」を実行（P24）
+
+
+■ファーム書き換え
+◇GCC（UM0096 Realtek Ameba build environment setup - gcc.pdf）
+1). Cygwin terminal上で$ cd /cygdrive/SDK_LOC/project/realtek_ameba1_va0_example/GCC-RELEASE（P7）
+2). run_openocd.batを起動させておく（P13）
+3). $ make setup GDB_SERVER=openocd（P14）
+4). $ make flash（P23）
+
+
+◇eclipse（UM0100 Realtek Ameba-1 build environment setup - eclipse.pdf）
+1). run_openocd.batを起動させておく（P13）
+2). "application OpenOCD flash download"実行（P28）
+
+
+
+※
+2017/10/2時点でSDK4.0のeclipse環境をRealtekから入手できていません。
+BTパッチ後のeclipseビルドが通るようには対応していませうが、動作が怪しいです。
+当面、BTパッチ後はGCCビルドの方が良さそうです。
+（Reltek社に正式eclipse環境は要望中）
+
+
+※
+評価ボードはOpenOCDで書き換え、デバッグが可能です。
+EVT以降はj-linkが必要です。（同ドキュメントファイルにj-linkでの手順記載もあり）
+
