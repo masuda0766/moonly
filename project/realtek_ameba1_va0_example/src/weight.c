@@ -82,7 +82,7 @@ bool is_unstabele_entry = FALSE;		// 入室不安定前の状態(入室安定状
 int weight_curr_body = 0;				// 現在の体重計値
 int weight_prev_body = 0;				// 前回の体重計値
 int weight_base_body = 0;				// 退室中の体重計値
-int weight_entry_body = 0;				// 退室中の体重計値
+int weight_entry_body = 0;				// 入室中の体重計値
 int weight_next_body = 0;				// 測定完了までに体重上昇した場合の基準体重バックアップ
 int weight_base_backup = 0;				// 入室中再入室時の基準体重バックアップ
 
@@ -293,7 +293,7 @@ void recordWeight( void ) {
 }
 
 
-// State0: ペット不在、安定
+// State0: 収納時不安定 //ペット不在、安定
 WEIGHT_STATE weightState_NoPet_Stable(void) {
 
 #if CONFIG_AUDREY_INDV_EMU == 0
@@ -302,8 +302,11 @@ WEIGHT_STATE weightState_NoPet_Stable(void) {
 		return STATE_NOPET_STABLE;
 	}
 #endif /* CONFIG_AUDREY_INDV_EMU */
-	// 基準値上昇したら、直前の基準値をペットなしの基準値として記録して State1 へ
-	if( weight_curr_body >= weight_prev_body + THRESH_REF_VAL ) {
+	/*// 基準値上昇したら、直前の基準値をペットなしの基準値として記録して State1 へ
+	if( weight_curr_body >= weight_prev_body + THRESH_REF_VAL ) {*/
+
+	// 基準値が低下したら、直前の基準値を収納時の基準値として記録して State1 へ//masuda
+	if( weight_curr_body <= weight_prev_body - THRESH_REF_VAL ) {	
 		// 日時取得済情報更新(固体識別のためのBT ONより先に更新必要)
 		time_flag = sntp_get_state();
 #if CONFIG_AUDREY_INDV_EMU == 1
@@ -321,8 +324,10 @@ WEIGHT_STATE weightState_NoPet_Stable(void) {
 			weight_base_backup = 0;
 			return STATE_PET_UNSTABLE;
 		}
-	// 基準値上昇したら、State5 へ
-	} else if( weight_curr_body <= weight_prev_body - THRESH_REF_VAL ) {
+	/*// 基準値減少したら、State5 へ//コメント修正masuda
+	} else if( weight_curr_body <= weight_prev_body - THRESH_REF_VAL ) {*/
+	// 基準値上昇したら、State5 へ//減少したらの間違い？
+	} else if( weight_curr_body >= weight_prev_body + THRESH_REF_VAL ) {
 		time_entry = time_curr;
 		return STATE_DOWN_UNSTABLE;
 	}
@@ -333,17 +338,19 @@ WEIGHT_STATE weightState_NoPet_Stable(void) {
 	return STATE_NOPET_STABLE;
 }
 
-// State1: ペットあり、不安定
+// State1: 開放時不安定//ペットあり、不安定
 WEIGHT_STATE weightState_Pet_Unstable(void) {
 
 #if CONFIG_AUDREY_INDV_LOG
 	Log_Info("[body] curr:%d, prev:%d, base:%d, entry:%d \r\n"
 	, weight_curr_body, weight_prev_body, weight_base_body, weight_entry_body); 
 #endif	/* CONFIG_AUDREY_INDV_LOG */
-	// 入室用標準偏差が小さければ、
+	// 開放時用標準偏差が小さければ、
 	if(is_sd_large_in == FALSE) {
-		if( weight_curr_body >= weight_base_body + THRESH_REF_VAL ) {
-			// ペットなし基準値と比べて大きければ State2 へ
+		/*if( weight_curr_body >= weight_base_body + THRESH_REF_VAL ) {
+			// ペットなし基準値と比べて大きければ State2 へ*/
+		if( weight_curr_body <= weight_base_body - THRESH_REF_VAL ) {
+			// 収納時基準値と比べて小さければ State2 へ
 			weight_entry_body = weight_curr_body;
 			// 入室時間保持
 			time_entry = time_curr;
@@ -377,7 +384,7 @@ WEIGHT_STATE weightState_Pet_Unstable(void) {
 			}
 			return STATE_PET_STABLE;
 		} else {
-			// さほど大きくなければ State1前の状態へ
+			// さほど小さくなければ State1前の状態へ
 			if(is_unstabele_entry) {
 				if(prev2State == STATE_PET_STABLE) {
 					// state2->state1->state2の場合
@@ -409,7 +416,7 @@ WEIGHT_STATE weightState_Pet_Unstable(void) {
 
 }
 
-// State2: ペットあり、安定
+// State2: 開放時、安定//ペットあり、安定
 WEIGHT_STATE weightState_Pet_Stable(void) {
 
 #if CONFIG_AUDREY_INDV_LOG
@@ -427,8 +434,10 @@ WEIGHT_STATE weightState_Pet_Stable(void) {
 	}
 #endif	/* CONFIG_AUDREY_INDV */
 
-	if( weight_curr_body >= weight_entry_body + THRESH_ENTRY ) {
-		// 基準値上昇したら、State1 へ
+	/*if( weight_curr_body >= weight_entry_body + THRESH_ENTRY ) {
+		// 基準値上昇したら、State1 へ*/
+	if( weight_curr_body <= weight_entry_body - THRESH_ENTRY ) {
+		// 基準値低下したら、State1 へ
 		if(weight_stable_cnt < NUM_STABLE) {
 			// 入室開始時の値をバックアップ
 			weight_stable[weight_stable_cnt].body = weight_base_body;
@@ -447,25 +456,33 @@ WEIGHT_STATE weightState_Pet_Stable(void) {
 		time_entry = time_curr;
 		is_unstabele_entry = TRUE;
 		return STATE_PET_UNSTABLE;
-	} else if( weight_curr_body <= weight_entry_body - THRESH_ENTRY ) {
-		// 基準値下降したら、State3 へ
+	/*} else if( weight_curr_body <= weight_entry_body - THRESH_ENTRY ) {
+		// 基準値下降したら、State3 へ*/
+	} else if( weight_curr_body >= weight_entry_body + THRESH_ENTRY ) {
+		// 基準値増加したら、State3 へ
 		return STATE_NOPET_UNSTABLE;
 	}
-	// 入室時基準体重が上がっていれば更新
+	/*// 入室時基準体重が上がっていれば更新
 	if( is_sd_large_in == FALSE && weight_curr_body > weight_entry_body) {
+		weight_entry_body = weight_curr_body;
+	}*/
+	// 開放時基準体重が下がっていれば更新
+	if( is_sd_large_in == FALSE && weight_curr_body < weight_entry_body) {
 		weight_entry_body = weight_curr_body;
 	}
 	return STATE_PET_STABLE;
 
 }
 
-// State3: ペット不在、不安定
+// State3: 収納時、不安定//ペット不在、不安定
 WEIGHT_STATE weightState_NoPet_UnStable(void) {
 
-	// 入室用標準偏差が小さければ、
+	// 開放時用標準偏差が小さければ、
 	if(is_sd_large_in == FALSE) {
-		if( weight_curr_body > (weight_base_body + ((weight_entry_body - weight_base_body) / 4)) ) {
-			// 入室中の1/4以上の重量であれば State2 へ
+		/*if( weight_curr_body > (weight_base_body + ((weight_entry_body - weight_base_body) / 4)) ) {
+			// 入室中の1/4以上の重量であれば State2 へ*/
+		if( weight_curr_body < (weight_base_body - ((weight_entry_body - weight_base_body)* 7 / 4)) ) {
+			// 開放中の7/4以下の重量であれば State2 へ
 			// 体重値が以前より増えていれば更新
 			if(weight_curr_body > weight_entry_body) {
 				weight_entry_body = weight_curr_body;
@@ -478,10 +495,12 @@ WEIGHT_STATE weightState_NoPet_UnStable(void) {
 			return STATE_PET_STABLE;
 		}
 	}
-	// 退室用標準偏差が小さければ、
+	// 収納時用標準偏差が小さければ、
 	if(is_sd_large_out == FALSE) {
-		if( weight_curr_body <= (weight_base_body + ((weight_entry_body - weight_base_body) / 4)) ) {
-			// 入室中の1/4以下の重量であれば State4 へ
+		/*if( weight_curr_body <= (weight_base_body + ((weight_entry_body - weight_base_body) / 4)) ) {
+			// 入室中の1/4以下の重量であれば State4 へ*/
+		if( weight_curr_body >= (weight_base_body + ((weight_entry_body - weight_base_body) *7 / 4)) ) {
+			// 開放中の7/4以上の重量であれば State4 へ
 			// 退室時間保持
 			time_exit = time_curr;
 			urine_chk_cnt = 1;
@@ -509,7 +528,7 @@ WEIGHT_STATE weightState_NoPet_UnStable(void) {
 
 }
 
-// State4: ペット不在、尿量計測待ち
+// State4: 収納時、計測結果送信
 WEIGHT_STATE weightState_NoPet_Urine(void) {
 
 	int weight_backup;
@@ -580,7 +599,7 @@ WEIGHT_STATE weightState_NoPet_Urine(void) {
 
 // State5: 重量低下、不安定
 WEIGHT_STATE weightState_Down_Unstable(void) {
-	// 退室用標準偏差が小さければ、state1 へ
+	// 退室用標準偏差が小さければ、state0 へ//コメント修正
 	if(is_sd_large_out == FALSE) {
 		weight_base_body = weight_curr_body;
 		return STATE_NOPET_STABLE;
